@@ -1,5 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import { Loading } from './LoadingComponent';
+import { baseURL} from '../shared/baseURL';
 
 import { Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem } from 'reactstrap';
 
@@ -10,7 +12,7 @@ import { Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle, Breadcrum
 
             <Card>
                     <Link to={`/menu/${dish.id}`}>
-                    <CardImg width="100%" src={dish.image} alt={dish.name} />
+                    <CardImg width="100%" src={baseURL + dish.image} alt={dish.name} />
 
                     <CardImgOverlay>
                         <CardTitle>{dish.name}</CardTitle>
@@ -25,14 +27,38 @@ import { Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle, Breadcrum
 
     const Menu = (props) => {
 
-        const menu = props.dishes.map((dish) => {
+        const menu = props.dishes.dishes.map((dish) => {
             return (
                 <div className="col-12 col-md-5 m-1" key={dish.id}>
                     <RenderMenuItem dish={dish}/>
                 </div>
             );
         });
-        return (
+
+        if(props.dishes.isLoading)
+        {
+             return (
+                <div className = "container">
+                   <div className = "row">
+                            <Loading />
+                   </div>
+                </div>
+            );
+        }
+
+        else if(props.dishes.errmsg)
+        {
+             return (
+                <div className = "container">
+                   <div className = "row">
+                        <h4>{props.dishes.errmsg}</h4>
+                   </div>
+                </div>
+            );
+        }
+        else
+        {
+            return (
             <div className="container">
 
                 <div className="row">
@@ -55,8 +81,9 @@ import { Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle, Breadcrum
                         {menu}
 
                 </div>
-            </div>
-        );
+                </div>
+            );
+        }
 
     }
 

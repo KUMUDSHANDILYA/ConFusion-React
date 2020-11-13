@@ -1,16 +1,21 @@
 import React from 'react';
 import { Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, Media } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { Loading } from './LoadingComponent';
+import { baseURL} from '../shared/baseURL';
+import {FadeTransform, Fade, Stagger} from 'react-animation-components';
 
 
 function RenderLeader({leader}) {
 
-    return (
+
+
+        return (
 
          <Media>
 
            <Media left href="#">
-                <Media object src={leader.image} alt={leader.name}  className="d-flex mr-5 img-thumbnail align-self-center" height="200px" width="200px" />
+                <Media object src={baseURL + leader.image} alt={leader.name}  className="d-flex mr-5 img-thumbnail align-self-center" height="200px" width="200px" />
             </Media>
             <Media body>
 
@@ -35,13 +40,44 @@ function About(props) {
 
     const leaders = props.leaders.map((leader) => {
         return (
-            <div className="col-12" key={leader.id}>
-            <Media list>
-                <RenderLeader leader={leader}/>
-                </Media>
-            </div>
+            <Fade in>
+
+                <div className="col-12" key={leader.id}>
+                    <Media list>
+                        <RenderLeader leader={leader}
+                        />
+                    </Media>
+                </div>
+
+            </Fade>
         );
     });
+
+    if(props.isLoading)
+        {
+             return (
+                <div className = "container">
+                   <div className = "row">
+                            <Loading />
+                   </div>
+                </div>
+            );
+        }
+
+        else if(props.errmsg)
+        {
+             return (
+                <div className = "container">
+                   <div className = "row">
+                        <h4>{props.errmsg}</h4>
+                   </div>
+                </div>
+            );
+        }
+
+    else
+    {
+
 
     return(
         <div className="container">
@@ -98,13 +134,17 @@ function About(props) {
                     <h2>Corporate Leadership</h2>
                 </div>
                 <div className="col-12">
-
+                    <Stagger in>
                         {leaders}
+                    </Stagger>
 
                 </div>
             </div>
         </div>
     );
+
+
+    }
 }
 
 export default About;
